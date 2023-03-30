@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
+</head>
+
+<body>
+
+  <script>
+
+    /**
+     * This is a simple one-page Phaser app that allows you to create simple looping animations
+     * and save the frames as individual images, which can then be converted to GIF or video formats.
+     * 
+     * In order to run this file locally, you will need to set up a local development server. Phaser's docs explain
+     * how to do this on different platforms, and why you need to:
+     * https://phaser.io/tutorials/getting-started-phaser3
+     * 
+     */
+
+    const config = {
+      type: Phaser.AUTO,
+      width: 512,
+      height: 270,
+      render: {
+        roundPixels: true,
+      },
+      scene: {
+        preload: preload,
+        create: create,
+        update: update
+      },
+      fps: {
+        target: 12,
+        // Change framerate to a very low value when exporting frames
+        // target: 2,
+        forceSetTimeOut: true
+      },
+      scale: {
+        zoom: 1,
+      }
+    };
+
+    const game = new Phaser.Game(config);
+
+    function preload() {
+      this.load.image('background', 'background.png');
+      this.load.image('extra-clouds', 'extra-clouds.png');
+      this.load.image('clouds-far', 'clouds-far.png');
+      this.load.image('clouds-mid', 'clouds-mid.png');
+      this.load.image('clouds-fore', 'clouds-fore.png');
+      this.load.image('waves-far', 'waves-far.png');
+      this.load.image('waves-mid', 'waves-mid.png');
+      this.load.image('waves-fore', 'waves-fore.png');
+      this.load.image('waves-forest', 'waves-forest.png');
+      this.load.image('reflection', 'reflection.png');
+      this.load.image('mist', 'mist.png');
+      this.load.image('ship', 'ship.png');
+      this.load.image('propeller-1', 'propeller-1.png');
+      this.load.image('propeller-2', 'propeller-2.png');
+      this.load.image('propeller-3', 'propeller-3.png');
+      this.load.image('propeller-hub', 'propeller-hub.png');
+    }
+
+    function create() {
+      this.background = this.add.image(0, 0, 'background').setOrigin(0, 0);
+      this.add.image(0, 90, 'extra-clouds').setOrigin(0, 0);
+
+      this.cloudsFar = this.add.tileSprite(0, 12, 512, 64, 'clouds-far').setOrigin(0, 0);
+      this.cloudsMid = this.add.tileSprite(0, 0, 512, 64, 'clouds-mid').setOrigin(0, 0);
+      this.cloudsFore = this.add.tileSprite(0, 0, 512, 64, 'clouds-fore').setOrigin(0, 0);
+
+      this.wavesFar = this.add.tileSprite(0, 195, 512, 2, 'waves-far').setOrigin(0, 0);
+      this.wavesMid = this.add.tileSprite(0, 197, 512, 8, 'waves-mid').setOrigin(0, 0);
+      this.wavesFore = this.add.tileSprite(0, 203, 512, 32, 'waves-fore').setOrigin(0, 0);
+      this.wavesForest = this.add.tileSprite(0, 212, 512, 64, 'waves-forest').setOrigin(0, 0);
+
+      this.add.image(16, 191, 'reflection').setOrigin(0, 0);
+
+      this.mist = this.add.tileSprite(0, 209, 512, 64, 'mist').setOrigin(0, 0);
+
+      this.add.image(260, 53, 'ship').setOrigin(0, 0);
+      this.prop1 = this.add.image(252, 170, 'propeller-1').setOrigin(0.5, 0.5);
+      this.prop2 = this.add.image(252, 170, 'propeller-2').setOrigin(0.5, 0.5);
+      this.prop3 = this.add.image(252, 170, 'propeller-3').setOrigin(0.5, 0.5);
+      this.add.image(252, 170, 'propeller-hub').setOrigin(0.5, 0.5);
+
+      this.snapshotCount = 0;
+      this.visibleProp = 1;
+    }
+
+    function update() {
+      // Total animation length: 64 frames
+      // Layer 1 has a tile width of 64 frames, so we want it to 
+      // move 64 frames over the course of the animation,
+      // or 1 pixel per frame
+      this.cloudsFar.tilePositionX += 1;
+      // Layer 2 tile size is 128; 2 * 64 = 128
+      this.cloudsMid.tilePositionX += 2;
+      // Layer 3 tile size is 256; 4 * 64 = 256
+      this.cloudsFore.tilePositionX += 4;
+
+      this.wavesFar.tilePositionX += 1;
+      this.wavesMid.tilePositionX += 2;
+      this.wavesFore.tilePositionX += 4;
+      this.wavesForest.tilePositionX += 8;
+      this.mist.tilePositionX += 16;
+
+      this.visibleProp += 1;
+      if ((this.visibleProp - 1) % 3 === 0) {
+        this.visibleProp = 1;
+      }
+      switch (this.visibleProp) {
+        case 1:
+          this.prop1.setAlpha(1);
+          this.prop2.setAlpha(0);
+          this.prop3.setAlpha(0);
+          break;
+        case 2:
+          this.prop1.setAlpha(0);
+          this.prop2.setAlpha(1);
+          this.prop3.setAlpha(0);
+          break;
+        case 3:
+          this.prop1.setAlpha(0);
+          this.prop2.setAlpha(0);
+          this.prop3.setAlpha(1);
+          break;
+      }
+
+      // Uncomment this to export frames
+      // const totalFrameCount = 64
+      // if (this.snapshotCount < totalFrameCount) {
+      //   this.renderer.snapshot((image) => {
+      //     exportCanvasAsPNG(this.canvas, `${this.snapshotCount}`, image.src);
+      //   });
+      //   this.snapshotCount += 1
+      // }
+      // Once frames are exported, you can convert them to a GIF with imagemagick:
+      // convert -delay 20 -loop 0 *.png myimage.gif
+    }
+
+    function exportCanvasAsPNG(id, fileName, dataUrl) {
+      var canvasElement = document.getElementById(id);
+      var MIME_TYPE = "image/png";
+      var imgURL = dataUrl;
+      var dlLink = document.createElement('a');
+      dlLink.download = fileName;
+      dlLink.href = imgURL;
+      dlLink.dataset.downloadurl = [MIME_TYPE, dlLink.download, dlLink.href].join(':');
+      document.body.appendChild(dlLink);
+      dlLink.click();
+      document.body.removeChild(dlLink);
+    }
+  </script>
+
+</body>
+
+</html>
