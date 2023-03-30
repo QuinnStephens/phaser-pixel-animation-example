@@ -32,7 +32,7 @@
         update: update
       },
       fps: {
-        target: 12,
+        target: 2,
         // Change framerate to a very low value when exporting frames
         // target: 2,
         forceSetTimeOut: true
@@ -44,23 +44,24 @@
 
     const game = new Phaser.Game(config);
 
+
     function preload() {
-      this.load.image('background', 'background.png');
-      this.load.image('extra-clouds', 'extra-clouds.png');
-      this.load.image('clouds-far', 'clouds-far.png');
-      this.load.image('clouds-mid', 'clouds-mid.png');
-      this.load.image('clouds-fore', 'clouds-fore.png');
-      this.load.image('waves-far', 'waves-far.png');
-      this.load.image('waves-mid', 'waves-mid.png');
-      this.load.image('waves-fore', 'waves-fore.png');
-      this.load.image('waves-forest', 'waves-forest.png');
-      this.load.image('reflection', 'reflection.png');
-      this.load.image('mist', 'mist.png');
-      this.load.image('ship', 'ship.png');
-      this.load.image('propeller-1', 'propeller-1.png');
-      this.load.image('propeller-2', 'propeller-2.png');
-      this.load.image('propeller-3', 'propeller-3.png');
-      this.load.image('propeller-hub', 'propeller-hub.png');
+      this.load.image('background', './img/background.png');
+      this.load.image('extra-clouds', './img/extra-clouds.png');
+      this.load.image('clouds-far', './img/clouds-far.png');
+      this.load.image('clouds-mid', './img/clouds-mid.png');
+      this.load.image('clouds-fore', './img/clouds-fore.png');
+      this.load.image('waves-far', './img/waves-far.png');
+      this.load.image('waves-mid', './img/waves-mid.png');
+      this.load.image('waves-fore', './img/waves-fore.png');
+      this.load.image('waves-forest', './img/waves-forest.png');
+      this.load.image('reflection', './img/reflection.png');
+      this.load.image('mist', './img/mist.png');
+      this.load.image('ship', './img/ship.png');
+      this.load.image('propeller-1', './img/propeller-1.png');
+      this.load.image('propeller-2', './img/propeller-2.png');
+      this.load.image('propeller-3', './img/propeller-3.png');
+      this.load.image('propeller-hub', './img/propeller-hub.png');
     }
 
     function create() {
@@ -80,11 +81,11 @@
 
       this.mist = this.add.tileSprite(0, 209, 512, 64, 'mist').setOrigin(0, 0);
 
-      this.add.image(260, 53, 'ship').setOrigin(0, 0);
-      this.prop1 = this.add.image(252, 170, 'propeller-1').setOrigin(0.5, 0.5);
-      this.prop2 = this.add.image(252, 170, 'propeller-2').setOrigin(0.5, 0.5);
-      this.prop3 = this.add.image(252, 170, 'propeller-3').setOrigin(0.5, 0.5);
-      this.add.image(252, 170, 'propeller-hub').setOrigin(0.5, 0.5);
+      // this.add.image(260, 53, 'ship').setOrigin(0, 0);
+      // this.prop1 = this.add.image(252, 170, 'propeller-1').setOrigin(0.5, 0.5);
+      // this.prop2 = this.add.image(252, 170, 'propeller-2').setOrigin(0.5, 0.5);
+      // this.prop3 = this.add.image(252, 170, 'propeller-3').setOrigin(0.5, 0.5);
+      // this.add.image(252, 170, 'propeller-hub').setOrigin(0.5, 0.5);
 
       this.snapshotCount = 0;
       this.visibleProp = 1;
@@ -107,36 +108,36 @@
       this.wavesForest.tilePositionX += 8;
       this.mist.tilePositionX += 16;
 
-      this.visibleProp += 1;
-      if ((this.visibleProp - 1) % 3 === 0) {
-        this.visibleProp = 1;
-      }
-      switch (this.visibleProp) {
-        case 1:
-          this.prop1.setAlpha(1);
-          this.prop2.setAlpha(0);
-          this.prop3.setAlpha(0);
-          break;
-        case 2:
-          this.prop1.setAlpha(0);
-          this.prop2.setAlpha(1);
-          this.prop3.setAlpha(0);
-          break;
-        case 3:
-          this.prop1.setAlpha(0);
-          this.prop2.setAlpha(0);
-          this.prop3.setAlpha(1);
-          break;
-      }
+      // this.visibleProp += 1;
+      // if ((this.visibleProp - 1) % 3 === 0) {
+      //   this.visibleProp = 1;
+      // }
+      // switch (this.visibleProp) {
+      //   case 1:
+      //     this.prop1.setAlpha(1);
+      //     this.prop2.setAlpha(0);
+      //     this.prop3.setAlpha(0);
+      //     break;
+      //   case 2:
+      //     this.prop1.setAlpha(0);
+      //     this.prop2.setAlpha(1);
+      //     this.prop3.setAlpha(0);
+      //     break;
+      //   case 3:
+      //     this.prop1.setAlpha(0);
+      //     this.prop2.setAlpha(0);
+      //     this.prop3.setAlpha(1);
+      //     break;
+      // }
 
       // Uncomment this to export frames
-      // const totalFrameCount = 64
-      // if (this.snapshotCount < totalFrameCount) {
-      //   this.renderer.snapshot((image) => {
-      //     exportCanvasAsPNG(this.canvas, `${this.snapshotCount}`, image.src);
-      //   });
-      //   this.snapshotCount += 1
-      // }
+      const totalFrameCount = 64
+      if (this.snapshotCount < totalFrameCount) {
+        this.renderer.snapshot((image) => {
+          exportCanvasAsPNG(this.canvas, `${this.snapshotCount}`, image.src);
+        });
+        this.snapshotCount += 1
+      }
       // Once frames are exported, you can convert them to a GIF with imagemagick:
       // convert -delay 20 -loop 0 *.png myimage.gif
     }
@@ -154,7 +155,6 @@
       document.body.removeChild(dlLink);
     }
   </script>
-
 </body>
 
 </html>
